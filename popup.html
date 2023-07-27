@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tag List Options</title>
+    <style>
+        body {
+            width: 300px;
+            font-family: "Tahoma", "Verdana", "Helvetica", sans-serif;
+            background-color: #1e1e2c;
+            color: #e8e8ec;
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            background-color: #3f4058;
+            color: #d1d1da;
+            border: 1px solid #777892;
+            resize: none;
+            overflow: auto;
+            height: 80px;
+        }
+
+        .textarea-container {
+            margin-bottom: 10px;
+        }
+
+            .textarea-container textarea {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 5px;
+                background-color: #3f4058;
+                color: #d1d1da;
+                border: 1px solid #777892;
+                resize: none;
+                overflow: auto;
+                height: 80px;
+            }
+
+        #saveBtn {
+            padding: 5px 10px;
+            background-color: #d1d1da;
+            color: #1e1e2c;
+            border: 1px solid #777892;
+            cursor: pointer;
+            width: 100%;
+        }
+
+            #saveBtn:hover {
+                background-color: #ccc;
+            }
+
+        #fileList {
+            margin-top: 10px;
+        }
+
+        .fileListItem {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+            .fileListItem input[type="checkbox"] {
+                margin-right: 5px;
+            }
+    </style>
+</head>
+<body>
+    <h1>Tag List Options</h1>
+
+    <label for="whitelistTags">Whitelist Tags (comma-separated):</label>
+    <div class="textarea-container">
+        <textarea id="whitelistTags"></textarea>
+    </div>
+
+    <label for="blacklistTags">Blacklist Tags (comma-separated):</label>
+    <div class="textarea-container">
+        <textarea id="blacklistTags"></textarea>
+    </div>
+
+    <button id="saveBtn">Save</button>
+
+    <input type="file" id="loadFilesInput" webkitdirectory directory multiple style="display: none" />
+
+    <div id="fileList"></div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
