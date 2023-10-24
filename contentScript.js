@@ -1,5 +1,5 @@
-// Inject a textbox and a "Copy" button below the <section id="tag-list"> element
-function injectTextbox(tagListElement, tags) {
+// Inject a textbox and a "Copy" button below the target element
+function injectTextbox(targetElement, tags) {
     const container = document.createElement('div');
 
     const heading = document.createElement('h3');
@@ -66,13 +66,13 @@ function injectTextbox(tagListElement, tags) {
     textbox.style.flexGrow = '1';
     copyButton.style.flexGrow = '0'; // Set flex-grow to 0 for the button to prevent it from expanding
 
-    tagListElement.appendChild(container);
+    targetElement.appendChild(container);
 
     // Resize the textbox when the window size changes
     window.addEventListener('resize', resizeTextbox);
 
     function resizeTextbox() {
-        textbox.style.width = `${tagListElement.offsetWidth - copyButton.offsetWidth - 10}px`;
+        textbox.style.width = `${targetElement.offsetWidth - copyButton.offsetWidth - 10}px`;
     }
 
     // Initial resize
@@ -135,39 +135,90 @@ function extractAndPopulateTextbox() {
   // Load options from storage and split into arrays
   chrome.storage.sync.get(['whitelistTags', 'blacklistTags'], function (result) {
     if (result.whitelistTags) {
-        whitelistTags.push(...result.whitelistTags);
+      whitelistTags.push(...result.whitelistTags);
     }
     if (result.blacklistTags) {
-        blacklistTags.push(...result.blacklistTags);
+      blacklistTags.push(...result.blacklistTags);
     }
 
     const tags = [...document.querySelectorAll('.general-tag-list [data-tag-name]')]
-        .map((element) => element.dataset.tagName.replace(/_/g, ' ').toLowerCase());
+      .map((element) => element.dataset.tagName.replace(/_/g, ' '))
+      .filter((tag) => !blacklistTags.includes(tag));
 
-    console.log('All tags:', tags);
-    console.log('Whitelisted tags:', whitelistTags);
-    console.log('Blacklisted tags:', blacklistTags);
-
-    // Remove blacklisted tags
-    const filteredTags = tags.filter(tag => !blacklistTags.map(blackTag => blackTag.toLowerCase()).includes(tag));
-
-    // Combine whitelisted tags and filtered tags
-    const modifiedTags = [...whitelistTags, ...filteredTags];
-
-    // Remove empty and undefined tags
-    const cleanedTags = modifiedTags.filter(tag => tag);
-
-    // Conditionally join the tags based on the presence of tags
-    const tagListOutput = cleanedTags.length > 0 ? cleanedTags.join(', ') : '';
+    const positiveTags = whitelistTags.filter((tag) => tags.includes(tag));
+    const modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...tags].join(', ') : tags.join(', ');
 
     const textbox = document.getElementById('tagListOutput');
     if (!textbox) {
-        injectTextbox(tagListElement, tagListOutput);
+      injectTextbox(tagListElement, modifiedTags);
     } else {
-        textbox.value = tagListOutput;
+      textbox.value = modifiedTags;
     }
-});
+  });
 }
 
 // Execute the extraction when the DOM is fully loaded
 window.addEventListener('load', extractAndPopulateTextbox);
+
+// Find all target HTML elements
+const targetElements = document.querySelectorAll('li.tag-type-4[data-tag-name]');
+
+// Iterate over each target element
+targetElements.forEach(targetElement => {
+  // Find the corresponding inject element for each target element
+  const injectElement = targetElement.querySelector('span.post-count[title]');
+
+  // Create copy button
+  const copyButton = document.createElement('button');
+  const copyIcon = document.createElement('img');
+  copyIcon.src = 'https://cdn-icons-png.flaticon.com/512/1621/1621635.png';
+  copyIcon.alt = 'Copy';
+  copyIcon.style.width = '13.33px';
+  copyIcon.style.height = '13.33px';
+
+  // Set the size and style of the copy button
+  copyButton.style.width = '26.33px';
+  copyButton.style.height = '21.5px';
+  copyButton.style.flex = '0 0 auto';
+  copyButton.style.borderRadius = '0px';
+  copyButton.style.display = 'flex';
+  copyButton.style.alignItems = 'center';
+  copyButton.style.justifyContent = 'center';
+  copyButton.style.textAlign = 'center';
+  copyButton.style.padding = '0px';
+  copyButton.style.border = 'none';
+  copyButton.style.fontFamily = 'Tahoma, Verdana, Helvetica, sans-serif';
+  copyButton.appendChild(copyIcon);
+
+  copyButton.addEventListener('click', () => {
+    const modifiedText = modifyText(targetElement.dataset.tagName);
+    copyToClipboard(modifiedText);
+  });
+
+  // Wrap the copy button in a container div
+  const buttonContainer = document.createElement('div');
+  buttonContainer.style.display = 'flex';
+  buttonContainer.style.alignItems = 'center';
+  buttonContainer.style.marginLeft = '5px'; // Adjust the margin as needed
+  buttonContainer.appendChild(copyButton);
+
+  // Insert the container next to the inject element
+  injectElement.insertAdjacentElement('afterend', buttonContainer);
+});
+
+// Function to modify the text as needed
+function modifyText(text) {
+  // Modify the text: replace underscore with space and add backslashes
+  const modifiedText = text.replace('_', ' ').replace('(', '\\(').replace(')', '\\)');
+  return modifiedText + ', ';
+}
+
+// Function to copy text to the clipboard
+function copyToClipboard(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textarea);
+}
