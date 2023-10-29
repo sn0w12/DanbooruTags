@@ -160,7 +160,8 @@ function extractAndPopulateTextbox() {
 
       console.log(tags);
       const positiveTags = whitelistTags.filter((tag) => tags.includes(tag));
-      const modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...tags].join(', ') : tags.join(', ');
+      var modifiedTags = tags.map(modifyText);
+      modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...modifiedTags].join(', ') : modifiedTags.join(', ');
   
       injectTextbox(tagListElement, modifiedTags, 'Prompt');
     }
@@ -240,7 +241,7 @@ function createCopyButton(targetElement, injectElement) {
   copyButton.style.width = '26.33px';
   copyButton.style.height = '21.5px';
   copyButton.style.borderRadius = '0px';
-  copyButton.style.marginLeft = '10px';
+  copyButton.style.marginLeft = '5px';
   copyButton.style.alignItems = 'center';
   copyButton.style.justifyContent = 'center';
   copyButton.style.textAlign = 'center';
