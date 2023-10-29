@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Tag List Extractor",
+  "name": "Booru Tag List Extractor",
   "version": "1.0",
-  "description": "Extracts 'data-tag-name' values from Danbooru",
+  "description": "Extracts tags from Danbooru or Gelbooru",
   "icons": {
     "16": "danbooru-logo-16.png",
     "48": "danbooru-logo-48.png",
@@ -17,7 +17,7 @@
   "permissions": ["http://*/", "https://*/", "storage", "activeTab", "fileSystem" ],
   "content_scripts": [
     {
-      "matches": ["https://danbooru.donmai.us/posts/*"],
+      "matches": ["https://danbooru.donmai.us/posts/*", "https://gelbooru.com/*"],
       "js": ["contentScript.js"]
     }
   ]

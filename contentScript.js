@@ -1,9 +1,18 @@
 // Inject a textbox and a "Copy" button below the target element
-function injectTextbox(targetElement, tags) {
+function injectTextbox(targetElement, tags, textContent) {
+    const currentDomain = window.location.hostname;
     const container = document.createElement('div');
 
-    const heading = document.createElement('h3');
-    heading.textContent = 'Prompt';
+    if (currentDomain === "danbooru.donmai.us") {
+      const heading = document.createElement('h3');
+      heading.textContent = textContent;
+      container.appendChild(heading);
+    }
+    else if (currentDomain === "gelbooru.com") {
+      const heading = document.createElement('b');
+      heading.textContent = textContent;
+      container.appendChild(heading);
+    }
 
     const textboxContainer = document.createElement('div');
     textboxContainer.style.display = 'flex';
@@ -40,7 +49,7 @@ function injectTextbox(targetElement, tags) {
     textboxContainer.appendChild(textbox);
     textboxContainer.appendChild(copyButton);
 
-    container.appendChild(heading);
+    
     container.appendChild(textboxContainer);
 
     // Add CSS styles to adjust the button height, corner style, and ensure container stays within parent element
@@ -48,7 +57,10 @@ function injectTextbox(targetElement, tags) {
     container.style.flexDirection = 'column';
     container.style.alignItems = 'stretch';
     container.style.overflow = 'hidden'; // Ensure content within the container is clipped if it exceeds the container's size
-    container.style.marginBottom = '10px'; // Add some bottom margin to prevent sticking out
+    if (currentDomain === "danbooru.donmai.us") {
+      container.style.marginBottom = '10px'; // Add some bottom margin to prevent sticking out
+    }
+    container.style.marginTop = '10px';
     container.style.width = '100%'; // Set the container's width to 100% to occupy the available space
 
     copyButton.style.flex = '0 0 auto';
@@ -81,11 +93,7 @@ function injectTextbox(targetElement, tags) {
 
 // Extract 'data-tag-name' values and populate the textbox
 function extractAndPopulateTextbox() {
-  const tagListElement = document.getElementById('tag-list');
-  if (!tagListElement) {
-    console.error("Couldn't find the <section id='tag-list'> element.");
-    return;
-  }
+  const currentDomain = window.location.hostname;
 
   const whitelistTags = [];
   const blacklistTags = [
@@ -141,18 +149,33 @@ function extractAndPopulateTextbox() {
       blacklistTags.push(...result.blacklistTags);
     }
 
-    const tags = [...document.querySelectorAll('.general-tag-list [data-tag-name]')]
-      .map((element) => element.dataset.tagName.replace(/_/g, ' '))
-      .filter((tag) => !blacklistTags.includes(tag));
+    console.log(currentDomain);
+    if (currentDomain === "danbooru.donmai.us") {
+      const tags = [...document.querySelectorAll('.general-tag-list [data-tag-name]')]
+        .map((element) => element.dataset.tagName.replace(/_/g, ' '))
+        .filter((tag) => !blacklistTags.includes(tag));
 
-    const positiveTags = whitelistTags.filter((tag) => tags.includes(tag));
-    const modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...tags].join(', ') : tags.join(', ');
+      const nodes = document.querySelectorAll(".tag-type-0");
+      var tagListElement = nodes[nodes.length- 1];
 
-    const textbox = document.getElementById('tagListOutput');
-    if (!textbox) {
-      injectTextbox(tagListElement, modifiedTags);
-    } else {
-      textbox.value = modifiedTags;
+      console.log(tags);
+      const positiveTags = whitelistTags.filter((tag) => tags.includes(tag));
+      const modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...tags].join(', ') : tags.join(', ');
+  
+      injectTextbox(tagListElement, modifiedTags, 'Prompt');
+    }
+    else if (currentDomain === "gelbooru.com") {
+      const tags = [...document.querySelectorAll('.tag-type-general a')]
+        .map((tagElement) => tagElement.textContent.trim())
+        .filter((tag) => tag !== "?");
+      
+      const nodes = document.querySelectorAll(".tag-type-general");
+      var tagListElement = nodes[nodes.length- 1];
+      console.log(tags);
+      const positiveTags = whitelistTags.filter((tag) => tags.includes(tag));
+      const modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...tags].join(', ') : tags.join(', ');
+  
+      injectTextbox(tagListElement, modifiedTags, 'Prompt');
     }
   });
 }
@@ -160,15 +183,53 @@ function extractAndPopulateTextbox() {
 // Execute the extraction when the DOM is fully loaded
 window.addEventListener('load', extractAndPopulateTextbox);
 
+// Character Names
 // Find all target HTML elements
-const targetElements = document.querySelectorAll('li.tag-type-4[data-tag-name]');
+const currentDomain = window.location.hostname;
 
-// Iterate over each target element
-targetElements.forEach(targetElement => {
-  // Find the corresponding inject element for each target element
-  const injectElement = targetElement.querySelector('span.post-count[title]');
+function handleDomainDanbooru() {
+  const targetElements = document.querySelectorAll('li.tag-type-4[data-tag-name]');
+  console.log(targetElements);
 
-  // Create copy button
+  targetElements.forEach(targetElement => {
+    const injectElement = targetElement.querySelector('span.post-count[title]');
+    createCopyButton(targetElement, injectElement);
+  });
+
+  if (targetElements.length !== 1) {
+    const nodes = document.querySelectorAll(".tag-type-4");
+    const tagListElement = nodes[nodes.length - 1];
+    const tags = [...document.querySelectorAll('.character-tag-list [data-tag-name]')]
+      .map((element) => element.dataset.tagName.replace(/_/g, ' '));
+
+    console.log(tags);
+    const modifiedTags = tags.map(modifyText).join(', ') + ", ";
+    injectTextbox(tagListElement, modifiedTags, 'All Characters');
+  }
+}
+
+function handleDomainGelbooru() {
+  const targetElements = document.querySelectorAll('.tag-type-character');
+  console.log(targetElements);
+
+  targetElements.forEach(targetElement => {
+    const injectElement = targetElement.querySelector('li.tag-type-character span[style="color: #a0a0a0;"]');
+    createCopyButton(targetElement, injectElement);
+  });
+
+  const tags = [...document.querySelectorAll('.tag-type-character a')]
+    .map((tagElement) => tagElement.textContent.trim())
+    .filter((tag) => tag !== "?");
+  if (targetElements.length !== 1) {
+    const nodes = document.querySelectorAll(".tag-type-character");
+    const tagListElement = nodes[nodes.length - 1];
+    console.log(tags);
+    const modifiedTags = tags.map(modifyText).join(', ') + ", ";
+    injectTextbox(tagListElement, modifiedTags, 'All Characters');
+  }
+}
+
+function createCopyButton(targetElement, injectElement) {
   const copyButton = document.createElement('button');
   const copyIcon = document.createElement('img');
   copyIcon.src = 'https://cdn-icons-png.flaticon.com/512/1621/1621635.png';
@@ -176,12 +237,10 @@ targetElements.forEach(targetElement => {
   copyIcon.style.width = '13.33px';
   copyIcon.style.height = '13.33px';
 
-  // Set the size and style of the copy button
   copyButton.style.width = '26.33px';
   copyButton.style.height = '21.5px';
-  copyButton.style.flex = '0 0 auto';
   copyButton.style.borderRadius = '0px';
-  copyButton.style.display = 'flex';
+  copyButton.style.marginLeft = '10px';
   copyButton.style.alignItems = 'center';
   copyButton.style.justifyContent = 'center';
   copyButton.style.textAlign = 'center';
@@ -195,22 +254,19 @@ targetElements.forEach(targetElement => {
     copyToClipboard(modifiedText);
   });
 
-  // Wrap the copy button in a container div
-  const buttonContainer = document.createElement('div');
-  buttonContainer.style.display = 'flex';
-  buttonContainer.style.alignItems = 'center';
-  buttonContainer.style.marginLeft = '5px'; // Adjust the margin as needed
-  buttonContainer.appendChild(copyButton);
-
-  // Insert the container next to the inject element
-  injectElement.insertAdjacentElement('afterend', buttonContainer);
-});
+  injectElement.insertAdjacentElement('beforeend', copyButton);
+}
 
 // Function to modify the text as needed
 function modifyText(text) {
-  // Modify the text: replace underscore with space and add backslashes
-  const modifiedText = text.replace('_', ' ').replace('(', '\\(').replace(')', '\\)');
-  return modifiedText + ', ';
+  return text.replace('_', ' ').replace('(', '\\(').replace(')', '\\)');
+}
+
+// Main logic based on the current domain
+if (currentDomain === "danbooru.donmai.us") {
+  handleDomainDanbooru();
+} else if (currentDomain === "gelbooru.com") {
+  handleDomainGelbooru();
 }
 
 // Function to copy text to the clipboard
