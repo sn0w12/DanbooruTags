@@ -213,18 +213,20 @@ function handleDomainGelbooru() {
   const targetElements = document.querySelectorAll('.tag-type-character');
   console.log(targetElements);
 
-  targetElements.forEach(targetElement => {
-    const injectElement = targetElement.querySelector('li.tag-type-character span[style="color: #a0a0a0;"]');
-    createCopyButton(targetElement, injectElement);
-  });
-
   const tags = [...document.querySelectorAll('.tag-type-character a')]
     .map((tagElement) => tagElement.textContent.trim())
     .filter((tag) => tag !== "?");
-  if (targetElements.length !== 1) {
+  console.log(tags);
+
+  targetElements.forEach((targetElement, index) => {
+    const injectElement = targetElement.querySelector('li.tag-type-character span[style="color: #a0a0a0;"]');
+    console.log(tags[index]);
+    createCopyButton(tags[index], injectElement);
+  });
+
+  if (tags.length !== 1) {
     const nodes = document.querySelectorAll(".tag-type-character");
     const tagListElement = nodes[nodes.length - 1];
-    console.log(tags);
     const modifiedTags = tags.map(modifyText).join(', ') + ", ";
     injectTextbox(tagListElement, modifiedTags, 'All Characters');
   }
@@ -241,7 +243,7 @@ function createCopyButton(targetElement, injectElement) {
   copyButton.style.width = '26.33px';
   copyButton.style.height = '21.5px';
   copyButton.style.borderRadius = '0px';
-  copyButton.style.marginLeft = '5px';
+  copyButton.style.marginLeft = '10px';
   copyButton.style.alignItems = 'center';
   copyButton.style.justifyContent = 'center';
   copyButton.style.textAlign = 'center';
@@ -251,8 +253,16 @@ function createCopyButton(targetElement, injectElement) {
   copyButton.appendChild(copyIcon);
 
   copyButton.addEventListener('click', () => {
-    const modifiedText = modifyText(targetElement.dataset.tagName);
-    copyToClipboard(modifiedText);
+    if (currentDomain === "danbooru.donmai.us") {
+      const tagName = targetElement.dataset.tagName;
+      const modifiedText = modifyText(tagName) + ', ';
+      copyToClipboard(modifiedText);
+    }
+    else if (currentDomain === "gelbooru.com") {
+      const tagName = targetElement;
+      const modifiedText = modifyText(tagName) + ', ';
+      copyToClipboard(modifiedText);
+    }
   });
 
   injectElement.insertAdjacentElement('beforeend', copyButton);
