@@ -137,7 +137,7 @@ function extractAndPopulateTextbox() {
     'licking testicle', 'licking weapon', 'bar censor', 'blank censor', 'blur censor',
     'glitch censor', 'heart censor', 'light censor', 'novelty censor', 'character censor',
     'text censor', 'flower censor', 'interface censor', 'speech bubble', 'english text',
-    'licking', 'censored', 'mosaic censoring', 'tongue out', 'web adress', 'alternate costume', 'web address'
+    'licking', 'censored', 'mosaic censoring', 'web adress', 'alternate costume', 'web address'
   ];
 
   // Load options from storage and split into arrays
@@ -168,7 +168,8 @@ function extractAndPopulateTextbox() {
     else if (currentDomain === "gelbooru.com") {
       const tags = [...document.querySelectorAll('.tag-type-general a')]
         .map((tagElement) => tagElement.textContent.trim())
-        .filter((tag) => tag !== "?");
+        .filter((tag) => tag !== "?")
+        .filter((tag) => !blacklistTags.includes(tag));
       
       const nodes = document.querySelectorAll(".tag-type-general");
       var tagListElement = nodes[nodes.length- 1];
