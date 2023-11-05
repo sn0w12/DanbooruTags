@@ -41,47 +41,4 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         );
     });
-
-    // Add event listener for file selection
-    loadFilesInput.addEventListener('change', function (event) {
-        var fileList = event.target.files;
-
-        // Remove existing file list
-        fileListContainer.innerHTML = '';
-
-        for (var i = 0; i < fileList.length; i++) {
-            var file = fileList[i];
-
-            if (file.name.endsWith('.safetensors')) {
-                // Create checkbox for each file
-                var checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.value = file.name;
-                checkbox.classList.add('fileCheckbox');
-
-                // Create label for checkbox
-                var label = document.createElement('label');
-                label.textContent = file.name;
-
-                // Create file list item
-                var listItem = document.createElement('div');
-                listItem.classList.add('fileListItem');
-                listItem.appendChild(checkbox);
-                listItem.appendChild(label);
-
-                // Add checkbox change event listener
-                checkbox.addEventListener('change', function () {
-                    if (this.checked) {
-                        // Add selected file to prompt
-                        var prompt = document.getElementById('prompt');
-                        var selectedFile = this.value;
-                        prompt.textContent += selectedFile + ' <lora:' + selectedFile + ':1.0> ';
-                    }
-                });
-
-                // Append file list item to file list container
-                fileListContainer.appendChild(listItem);
-            }
-        }
-    });
 });
