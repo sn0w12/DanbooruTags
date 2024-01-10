@@ -78,7 +78,11 @@ function injectTextbox(targetElement, tags, textContent) {
     textbox.style.flexGrow = '1';
     copyButton.style.flexGrow = '0'; // Set flex-grow to 0 for the button to prevent it from expanding
 
-    targetElement.appendChild(container);
+    if (targetElement && targetElement.parentNode) {
+      targetElement.insertAdjacentElement('afterend', container);
+    } else {
+        console.error('Target element not found or does not have a parent node');
+    }
 
     // Resize the textbox when the window size changes
     window.addEventListener('resize', resizeTextbox);
