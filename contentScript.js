@@ -165,7 +165,7 @@ function extractAndPopulateTextbox() {
       console.log(tags);
       const positiveTags = whitelistTags.filter((tag) => tags.includes(tag));
       var modifiedTags = tags.map(modifyText);
-      modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...modifiedTags].join(', ') : modifiedTags.join(', ');
+      modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...modifiedTags].join(', ') : modifiedTags.join(', ') + ", ";
   
       injectTextbox(tagListElement, modifiedTags, 'Prompt');
     }
@@ -194,23 +194,38 @@ window.addEventListener('load', extractAndPopulateTextbox);
 const currentDomain = window.location.hostname;
 
 function handleDomainDanbooru() {
-  const targetElements = document.querySelectorAll('li.tag-type-4[data-tag-name]');
-  console.log(targetElements);
+  const allTags = new Set();
 
-  targetElements.forEach(targetElement => {
-    const injectElement = targetElement.querySelector('span.post-count[title]');
-    createCopyButton(targetElement, injectElement);
-  });
+  const processTags = (tagType, tagListSelector) => {
+    const targetElements = document.querySelectorAll(`li.${tagType}[data-tag-name]`);
 
-  if (targetElements.length !== 1) {
-    const nodes = document.querySelectorAll(".tag-type-4");
-    const tagListElement = nodes[nodes.length - 1];
-    const tags = [...document.querySelectorAll('.character-tag-list [data-tag-name]')]
-      .map((element) => element.dataset.tagName.replace(/_/g, ' '));
+    targetElements.forEach(targetElement => {
+      const injectElement = targetElement.querySelector('span.post-count[title]');
+      createCopyButton(targetElement, injectElement);
+    });
 
-    console.log(tags);
-    const modifiedTags = tags.map(modifyText).join(', ') + ", ";
-    injectTextbox(tagListElement, modifiedTags, 'All Characters');
+    const tags = [...document.querySelectorAll(`${tagListSelector} [data-tag-name]`)]
+      .map(element => element.dataset.tagName.replace(/_/g, ' '));
+    console.log(`Tags found for ${tagType}:`, tags);
+
+    tags.forEach(tag => allTags.add(tag));
+  };
+
+  processTags('tag-type-4', '.character-tag-list');
+  processTags('tag-type-3', '.copyright-tag-list');
+
+  console.log('All collected tags:', [...allTags]);
+
+  if (allTags.size > 0) {
+    const modifiedTags = '(' + [...allTags].map(modifyText).join(', ') + ':1.2), ';
+    const lastTagType4Element = document.querySelector('.flex.tag-type-4:last-of-type');
+    if (lastTagType4Element) {
+      injectTextbox(lastTagType4Element, modifiedTags, 'Character & Copyright');
+    } else {
+      console.warn('No .flex.tag-type-4:last-of-type element found');
+    }
+  } else {
+    console.warn('No tags collected to inject');
   }
 }
 
