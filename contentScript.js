@@ -165,8 +165,6 @@ function extractAndPopulateTextbox() {
         .filter((tag) => config.tagFilter ? config.tagFilter(tag) : true)
         .filter((tag) => !blacklistTags.includes(tag));
 
-      console.log(tags);
-
       const positiveTags = whitelistTags.filter((tag) => tags.includes(tag));
       let modifiedTags = tags.map(modifyText);
       if (currentDomain === "danbooru.donmai.us") {
@@ -214,15 +212,12 @@ function handleDomainDanbooru() {
 
     const tags = [...document.querySelectorAll(`${tagListSelector} [data-tag-name]`)]
       .map(element => element.dataset.tagName.replace(/_/g, ' '));
-    console.log(`Tags found for ${tagType}:`, tags);
 
     tags.forEach(tag => allTags.add(tag));
   };
 
   processTags('tag-type-4', '.character-tag-list');
   processTags('tag-type-3', '.copyright-tag-list');
-
-  console.log('All collected tags:', [...allTags]);
 
   if (allTags.size > 0) {
     const modifiedTags = [...allTags].map(modifyText).join(', ');
@@ -240,7 +235,6 @@ function handleDomainDanbooru() {
 function handleDomainGelbooru() {
   // Select all elements with class 'tag-type-character'
   const targetElements = document.querySelectorAll('.tag-type-character');
-  console.log(targetElements);
 
   // Extract and log tag names, excluding any that are "?"
   const tags = Array.from(targetElements).map(targetElement => {
@@ -248,7 +242,6 @@ function handleDomainGelbooru() {
     const tagElement = targetElement.querySelector('a:not([href*="wiki"])'); // Exclude wiki links if they always use "?"
     return tagElement ? tagElement.textContent.trim() : null;
   }).filter(tag => tag !== null && tag !== "?");
-  console.log(tags);
 
   // Assuming 'createCopyButton' is a function to inject a "Copy" button next to each tag
   targetElements.forEach((element, index) => {
