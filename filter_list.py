@@ -1,27 +1,29 @@
 # Define the structured list as a multiline string
 hair_traits = """
-makeup
-eyeliner
-eyeshadow
-* blue_eyeshadow
-* green_eyeshadow
-* red_eyeshadow
-* yellow_eyeshadow
-forehead_mark
-lip_balm
-lipgloss
-lipstick
-* black_lipstick
-* blue_lipstick
-* green_lipstick
-* orange_lipstick
-* pink_lipstick
-* striped_lipstick
-* purple_lipstick
-* red_lipstick
-* white_lipstick
-* yellow_lipstick
-mascara
+Tattoo
+
+barcode_tattoo
+butterfly_tattoo
+dragon_tattoo
+heart_tattoo
+irezumi
+number_tattoo
+slave_tattoo
+star_tattoo
+tribal_tattoo
+womb_tattoo
+
+arm_tattoo
+back_tattoo
+* tramp_stamp
+chest_tattoo
+facial_tattoo
+full_body_tattoo
+leg_tattoo
+neck_tattoo
+pubic_tattoo
+shoulder_tattoo
+tattooed_breast
 """
 
 # Split the string into lines and initialize an array to hold the results
