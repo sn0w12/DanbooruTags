@@ -1,98 +1,81 @@
 // Inject a textbox and a "Copy" button below the target element
 function injectTextbox(targetElement, tags, textContent) {
-    const currentDomain = window.location.hostname;
-    const container = document.createElement('div');
+  const domainStyles = {
+      "danbooru.donmai.us": {
+          element: 'h3',
+          marginBottom: '10px'
+      },
+      "gelbooru.com": {
+          element: 'b',
+          marginLeft: '13px'
+      }
+  };
 
-    if (currentDomain === "danbooru.donmai.us") {
-      const heading = document.createElement('h3');
+  const currentDomain = window.location.hostname;
+  const container = document.createElement('div');
+  container.style = `display: flex; flex-direction: column; align-items: stretch; overflow: hidden; margin-top: 10px; width: 100%; ${domainStyles[currentDomain]?.marginBottom ? `margin-bottom: ${domainStyles[currentDomain].marginBottom};` : ''} ${domainStyles[currentDomain]?.marginLeft ? `margin-left: ${domainStyles[currentDomain].marginLeft};` : ''}`;
+
+  if (domainStyles[currentDomain]) {
+      const heading = document.createElement(domainStyles[currentDomain].element);
       heading.textContent = textContent;
       container.appendChild(heading);
-    }
-    else if (currentDomain === "gelbooru.com") {
-      const heading = document.createElement('b');
-      heading.textContent = textContent;
-      container.appendChild(heading);
-    }
+  }
 
-    const textboxContainer = document.createElement('div');
-    textboxContainer.style.display = 'flex';
-    textboxContainer.style.alignItems = 'stretch';
+  const textboxContainer = document.createElement('div');
+  textboxContainer.style = 'display: flex; align-items: stretch;';
 
-    const textbox = document.createElement('input');
-    textbox.type = 'text';
-    textbox.id = 'tagListOutput';
-    textbox.value = tags;
-    textbox.classList.add('flex-auto', 'ui-autocomplete-input');
-    textbox.setAttribute('data-shortcut', 'q');
-    textbox.setAttribute('data-autocomplete', 'tag-query');
-    textbox.setAttribute('autocapitalize', 'none');
-    textbox.setAttribute('autocomplete', 'off');
-    textbox.setAttribute('title', 'Shortcut is q');
-    textbox.style.fontFamily = 'Tahoma, Verdana, Helvetica, sans-serif'; // Set the font family
+  const textbox = document.createElement('input');
+  const textboxStyleProperties = {
+    fontFamily: 'Tahoma, Verdana, Helvetica, sans-serif',
+  };
 
-    const copyButton = document.createElement('button');
+  // Conditionally add flexGrow: '1' if on danbooru.donmai.us
+  if (currentDomain === "danbooru.donmai.us") {
+      textboxStyleProperties.flexGrow = '1';
+  }
 
-    // Add icon to the button
-    const copyIcon = document.createElement('img');
-    copyIcon.src = 'https://cdn-icons-png.flaticon.com/512/1621/1621635.png';
-    copyIcon.alt = 'Copy';
-    copyIcon.style.width = '13.33px'; // Adjust the width of the icon
-    copyIcon.style.height = '13.33px'; // Adjust the height of the icon
-    copyButton.appendChild(copyIcon);
+  Object.assign(textbox.style, textboxStyleProperties);
+  Object.assign(textbox, {
+      type: 'text',
+      id: 'tagListOutput',
+      value: tags,
+      className: 'flex-auto ui-autocomplete-input',
+      autocapitalize: 'none',
+      autocomplete: 'off',
+      title: 'Shortcut is q'
+  });
+  textbox.setAttribute('data-shortcut', 'q');
+  textbox.setAttribute('data-autocomplete', 'tag-query');
 
-    copyButton.addEventListener('click', () => {
+  const copyButton = document.createElement('button');
+  copyButton.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/512/1621/1621635.png" alt="Copy" style="width: 13.33px; height: 13.33px;">`;
+  copyButton.style = 'font-family: Tahoma, Verdana, Helvetica, sans-serif; flex: 0 0 auto; width: 26.33px; height: 21.5px; border-radius: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0; border: none;';
+
+  copyButton.addEventListener('click', async () => {
+    try {
+        await navigator.clipboard.writeText(textbox.value);
+        // Select the text in the textbox after copying
         textbox.select();
-        document.execCommand('copy');
-    });
-    copyButton.style.fontFamily = 'Tahoma, Verdana, Helvetica, sans-serif'; // Set the font family
-
-    textboxContainer.appendChild(textbox);
-    textboxContainer.appendChild(copyButton);
-
-    
-    container.appendChild(textboxContainer);
-
-    // Add CSS styles to adjust the button height, corner style, and ensure container stays within parent element
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-    container.style.alignItems = 'stretch';
-    container.style.overflow = 'hidden'; // Ensure content within the container is clipped if it exceeds the container's size
-    if (currentDomain === "danbooru.donmai.us") {
-      container.style.marginBottom = '10px'; // Add some bottom margin to prevent sticking out
+        // Optionally, you could also focus the textbox
+        textbox.focus();
+    } catch (err) {
+        console.error('Failed to copy text: ', err);
     }
-    container.style.marginTop = '10px';
-    container.style.width = '100%'; // Set the container's width to 100% to occupy the available space
+  });
 
-    copyButton.style.flex = '0 0 auto';
-    copyButton.style.width = '26.33px'; // Adjust the width of the copy button using a fixed value
-    copyButton.style.height = '21.5px'; // Adjust the height of the copy button using a fixed value
-    copyButton.style.borderRadius = '0';
-    copyButton.style.display = 'flex';
-    copyButton.style.alignItems = 'center';
-    copyButton.style.justifyContent = 'center';
-    copyButton.style.textAlign = 'center';
-    copyButton.style.padding = '0';
-    copyButton.style.border = 'none'; // Remove the border
+  textboxContainer.append(textbox, copyButton);
+  container.appendChild(textboxContainer);
 
-    // Make the textbox and button the same height using flex-grow
-    textbox.style.flexGrow = '1';
-    copyButton.style.flexGrow = '0'; // Set flex-grow to 0 for the button to prevent it from expanding
-
-    if (targetElement && targetElement.parentNode) {
+  if (targetElement && targetElement.parentNode) {
       targetElement.insertAdjacentElement('afterend', container);
-    } else {
-        console.error('Target element not found or does not have a parent node');
-    }
+  } else {
+      console.error('Target element not found or does not have a parent node.');
+      return;
+  }
 
-    // Resize the textbox when the window size changes
-    window.addEventListener('resize', resizeTextbox);
-
-    function resizeTextbox() {
-        textbox.style.width = `${targetElement.offsetWidth - copyButton.offsetWidth - 10}px`;
-    }
-
-    // Initial resize
-    resizeTextbox();
+  const resizeTextbox = () => textbox.style.width = `${targetElement.offsetWidth - copyButton.offsetWidth - 10}px`;
+  window.addEventListener('resize', resizeTextbox);
+  resizeTextbox();
 }
 
 // Extract 'data-tag-name' values and populate the textbox
@@ -153,34 +136,59 @@ function extractAndPopulateTextbox() {
       blacklistTags.push(...result.blacklistTags);
     }
 
-    console.log(currentDomain);
-    if (currentDomain === "danbooru.donmai.us") {
-      const tags = [...document.querySelectorAll('.general-tag-list [data-tag-name]')]
-        .map((element) => element.dataset.tagName.replace(/_/g, ' '))
+    // Assuming additionalExclusionList is defined
+    const additionalExclusionList = ['Alternate hair color', 'Aqua hair', 'Black hair', 'Blonde hair', 'Blue hair', 'Brown hair', 'Light brown hair', 'Green hair', 'Grey hair', 'Orange hair', 'Pink hair', 'Purple hair', 'Lavender hair', 'Red hair', 'Silver hair', 'White hair', 'Multicolored hair', 'Gradient hair', 'Highlights', 'Two-tone hair', 'Rainbow hair', 'Colored inner hair', 'Uncolored hair roots', 'Very short hair', 'Short hair', 'Long hair', 'Very long hair (/vlh)', 'Absurdly long hair', 'Big hair', 'Bald', 'Bald girl', 'Asymmetrical Hair', 'Side Shave', 'Undercut', 'Alternate hairstyle', 'Hair down', 'Hair up', 'Curly hair', 'Ringlets', 'Drill hair', 'Twin drills', 'Flipped hair', 'Messy hair', 'Pointy hair', 'Spiked hair', 'Wavy hair', 'Finger wave', 'Bangs', 'Asymmetrical bangs', 'Baby bangs', 'Blunt bangs', 'Bumper bangs', 'Fringe', 'Hair over eyes', 'Hair over one eye /hooe', 'Parted bangs', 'Swept bangs', 'Curtained hair', 'Hair between eyes', 'Hair intakes', 'Payot', "Widow's peak", 'Ahoge', 'Heart ahoge', 'Huge ahoge', 'Antenna hair', 'Fauxhawk', 'Hair slicked back', 'Mohawk', 'Side Part', 'Victory Rolls', 'Zigzag Part', 'hair censor', 'Hair bikini', 'Hair in mouth', 'Hair over breasts', 'Hair over shoulder', 'Hair scarf', 'Braid', 'Crown braid', 'Dutch braid', 'Fishtail braid', 'Front braid', 'Side braid', 
+    'French braid', 'Single braid', 'Multiple braids', 'Ladder braid', 'Twin braids', 'Tri braids', 'Quad braids', 'Fauxhawk', 'Hair bun', 'Braided bun', 'Double bun', 'Hair rings', 'Half updo', 'One side up', 'Two side up', 'Low-tied long hair', 'Multi-tied hair', 
+    'Ponytail', 'Front ponytail', 'High ponytail', 'Short ponytail', 'Side ponytail', 'Topknot', 'Twintails', 'Low twintails', 'Short twintails', 'Uneven twintails', 'Tri tails', 'Quad tails', 'Quin tails', 'Bob cut', 'Bowl cut', 'Buzz cut', 'Crew cut', 'Pixie cut', 'Quiff', 'Cornrows', 'Hairlocs', 'Hime cut', 'Mullet', 'Ringlets', 'Afro', 'Huge afro', 'Pompadour', 'Shouten pegasus mix mori', 'Aqua eyes', 'Black eyes', 'Blue eyes', 'Brown eyes', 'Amber eyes', 'Light Brown eyes', 'Gold eyes', 'Green eyes', 'Grey eyes', 'Hazel eyes', 'Orange eyes', 'Pink eyes', 'Purple eyes', 'Lavender eyes', 'Red eyes', 'Maroon eyes', 'Silver eyes', 'White eyes', 'Yellow eyes', 'Hazel eyes', 'Heterochromia', 'Multicolored eyes', 'Blue sclera', 'Black sclera', 'Bloodshot eyes', 'Green sclera', 'Grey sclera', 'Orange sclera', 'Pink sclera', 'Red sclera', 'Yellow sclera', 'Mismatched sclera', 'Flat chest', 'Small breasts', 'Medium breasts', 'Large breasts', 'Huge breasts', 'Gigantic breasts', 'dark-skinned female', 'dark skin', 'makeup', 'eyeliner', 'eyeshadow', 'blue eyeshadow', 'green eyeshadow', 'red eyeshadow', 'yellow eyeshadow', 'forehead mark', 'lip balm', 'lipgloss', 'lipstick', 'black lipstick', 'blue lipstick', 'green lipstick', 'orange lipstick', 'pink lipstick', 'striped lipstick', 'purple lipstick', 'red lipstick', 'white lipstick', 'yellow lipstick', 'mascara', 'aged up', 'body freckles', 'freckles', 'wide hips', 'ringed eyes', 'medium hair'];
+
+    // Extend the domainConfig with an optional additional tag filter step
+    const domainConfig = {
+      "danbooru.donmai.us": {
+        querySelector: '.general-tag-list [data-tag-name]',
+        tagListSelector: '.tag-type-0',
+        tagNameProcessor: (element) => element.dataset.tagName.replace(/_/g, ' ')
+      },
+      "gelbooru.com": {
+        querySelector: '.tag-type-general a',
+        tagListSelector: '.tag-type-general',
+        tagNameProcessor: (tagElement) => tagElement.textContent.trim(),
+        tagFilter: (tag) => tag !== "?"
+      }
+    };
+
+    const currentDomain = window.location.hostname;
+    const config = domainConfig[currentDomain];
+
+    if (config) {
+      let tags = [...document.querySelectorAll(config.querySelector)]
+        .map(config.tagNameProcessor)
+        .filter((tag) => config.tagFilter ? config.tagFilter(tag) : true)
         .filter((tag) => !blacklistTags.includes(tag));
 
-      const nodes = document.querySelectorAll(".tag-type-0");
-      var tagListElement = nodes[nodes.length- 1];
+      console.log(tags);
 
-      console.log(tags);
       const positiveTags = whitelistTags.filter((tag) => tags.includes(tag));
-      var modifiedTags = tags.map(modifyText);
-      modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...modifiedTags].join(', ') : modifiedTags.join(', ') + ", ";
-  
-      injectTextbox(tagListElement, modifiedTags, 'Prompt');
-    }
-    else if (currentDomain === "gelbooru.com") {
-      const tags = [...document.querySelectorAll('.tag-type-general a')]
-        .map((tagElement) => tagElement.textContent.trim())
-        .filter((tag) => tag !== "?")
-        .filter((tag) => !blacklistTags.includes(tag));
-      
-      const nodes = document.querySelectorAll(".tag-type-general");
-      var tagListElement = nodes[nodes.length- 1];
-      console.log(tags);
-      const positiveTags = whitelistTags.filter((tag) => tags.includes(tag));
-      const modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...tags].join(', ') : tags.join(', ');
-  
+      let modifiedTags = tags.map(modifyText);
+      if (currentDomain === "danbooru.donmai.us") {
+        modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...modifiedTags] : modifiedTags;
+      } else { // For gelbooru.com
+        modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...tags] : tags;
+      }
+      modifiedTags = modifiedTags.join(', ') + (currentDomain === "danbooru.donmai.us" ? ", " : "");
+
+      // Filtering out additional criteria from tags
+      const filteredTags = tags
+        .filter(tag => !additionalExclusionList.some(exclusion => tag.includes(exclusion.toLowerCase())))
+        .join(', ');
+
+      // Identifying the last tag list element
+      const nodes = document.querySelectorAll(config.tagListSelector);
+      const tagListElement = nodes[nodes.length - 1];
+
+      // Injecting the second textbox with filtered tags, it will be injected first and then the next will be injected over this
+      injectTextbox(tagListElement, filteredTags, 'Filtered Tags');
+
+      // Injecting the first textbox with modified tags
       injectTextbox(tagListElement, modifiedTags, 'Prompt');
     }
   });
@@ -217,7 +225,7 @@ function handleDomainDanbooru() {
   console.log('All collected tags:', [...allTags]);
 
   if (allTags.size > 0) {
-    const modifiedTags = '(' + [...allTags].map(modifyText).join(', ') + ':1.2), ';
+    const modifiedTags = [...allTags].map(modifyText).join(', ');
     const lastTagType4Element = document.querySelector('.flex.tag-type-4:last-of-type');
     if (lastTagType4Element) {
       injectTextbox(lastTagType4Element, modifiedTags, 'Character & Copyright');
@@ -230,24 +238,29 @@ function handleDomainDanbooru() {
 }
 
 function handleDomainGelbooru() {
+  // Select all elements with class 'tag-type-character'
   const targetElements = document.querySelectorAll('.tag-type-character');
   console.log(targetElements);
 
-  const tags = [...document.querySelectorAll('.tag-type-character a')]
-    .map((tagElement) => tagElement.textContent.trim())
-    .filter((tag) => tag !== "?");
+  // Extract and log tag names, excluding any that are "?"
+  const tags = Array.from(targetElements).map(targetElement => {
+    // Assuming the first <a> tag within each element is the relevant tag
+    const tagElement = targetElement.querySelector('a:not([href*="wiki"])'); // Exclude wiki links if they always use "?"
+    return tagElement ? tagElement.textContent.trim() : null;
+  }).filter(tag => tag !== null && tag !== "?");
   console.log(tags);
 
-  targetElements.forEach((targetElement, index) => {
-    const injectElement = targetElement.querySelector('li.tag-type-character span[style="color: #a0a0a0;"]');
-    console.log(tags[index]);
-    createCopyButton(tags[index], injectElement);
+  // Assuming 'createCopyButton' is a function to inject a "Copy" button next to each tag
+  targetElements.forEach((element, index) => {
+    if (tags[index]) { // Check if tag exists to avoid errors
+      createCopyButton(tags[index], element); // Adjusted to inject the button directly into the target element
+    }
   });
 
-  if (tags.length !== 1) {
-    const nodes = document.querySelectorAll(".tag-type-character");
-    const tagListElement = nodes[nodes.length - 1];
-    const modifiedTags = tags.map(modifyText).join(', ') + ", ";
+  // Inject a textbox with all character tags at the end if there are more than one.
+  if (tags.length > 1) {
+    const tagListElement = targetElements[targetElements.length - 1];
+    const modifiedTags = tags.map(tag => modifyText(tag)).join(', ') + ", "; // Assuming 'modifyText' modifies the tag text
     injectTextbox(tagListElement, modifiedTags, 'All Characters');
   }
 }

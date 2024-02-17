@@ -31,13 +31,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 blacklistTags: blacklistTags,
             },
             function () {
-                // Reload the current tab after saving
+                // Check the current tab's URL before deciding to reload
                 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                    chrome.tabs.reload(tabs[0].id);
-                });
+                    var currentURL = new URL(tabs[0].url);
+                    var hostname = currentURL.hostname;
+                    
+                    // Only reload if on danbooru.donmai.us or gelbooru.com
+                    if (hostname === "danbooru.donmai.us" || hostname === "gelbooru.com") {
+                        chrome.tabs.reload(tabs[0].id);
+                    }
 
-                // Close the popup after saving
-                window.close();
+                    // Close the popup after saving
+                    window.close();
+                });
             }
         );
     });
