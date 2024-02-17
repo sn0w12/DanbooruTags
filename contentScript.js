@@ -139,7 +139,7 @@ function extractAndPopulateTextbox() {
     // Assuming additionalExclusionList is defined
     const additionalExclusionList = ['Alternate hair color', 'Aqua hair', 'Black hair', 'Blonde hair', 'Blue hair', 'Brown hair', 'Light brown hair', 'Green hair', 'Grey hair', 'Orange hair', 'Pink hair', 'Purple hair', 'Lavender hair', 'Red hair', 'Silver hair', 'White hair', 'Multicolored hair', 'Gradient hair', 'Highlights', 'Two-tone hair', 'Rainbow hair', 'Colored inner hair', 'Uncolored hair roots', 'Very short hair', 'Short hair', 'Long hair', 'Very long hair (/vlh)', 'Absurdly long hair', 'Big hair', 'Bald', 'Bald girl', 'Asymmetrical Hair', 'Side Shave', 'Undercut', 'Alternate hairstyle', 'Hair down', 'Hair up', 'Curly hair', 'Ringlets', 'Drill hair', 'Twin drills', 'Flipped hair', 'Messy hair', 'Pointy hair', 'Spiked hair', 'Wavy hair', 'Finger wave', 'Bangs', 'Asymmetrical bangs', 'Baby bangs', 'Blunt bangs', 'Bumper bangs', 'Fringe', 'Hair over eyes', 'Hair over one eye /hooe', 'Parted bangs', 'Swept bangs', 'Curtained hair', 'Hair between eyes', 'Hair intakes', 'Payot', "Widow's peak", 'Ahoge', 'Heart ahoge', 'Huge ahoge', 'Antenna hair', 'Fauxhawk', 'Hair slicked back', 'Mohawk', 'Side Part', 'Victory Rolls', 'Zigzag Part', 'hair censor', 'Hair bikini', 'Hair in mouth', 'Hair over breasts', 'Hair over shoulder', 'Hair scarf', 'Braid', 'Crown braid', 'Dutch braid', 'Fishtail braid', 'Front braid', 'Side braid', 
     'French braid', 'Single braid', 'Multiple braids', 'Ladder braid', 'Twin braids', 'Tri braids', 'Quad braids', 'Fauxhawk', 'Hair bun', 'Braided bun', 'Double bun', 'Hair rings', 'Half updo', 'One side up', 'Two side up', 'Low-tied long hair', 'Multi-tied hair', 
-    'Ponytail', 'Front ponytail', 'High ponytail', 'Short ponytail', 'Side ponytail', 'Topknot', 'Twintails', 'Low twintails', 'Short twintails', 'Uneven twintails', 'Tri tails', 'Quad tails', 'Quin tails', 'Bob cut', 'Bowl cut', 'Buzz cut', 'Crew cut', 'Pixie cut', 'Quiff', 'Cornrows', 'Hairlocs', 'Hime cut', 'Mullet', 'Ringlets', 'Afro', 'Huge afro', 'Pompadour', 'Shouten pegasus mix mori', 'Aqua eyes', 'Black eyes', 'Blue eyes', 'Brown eyes', 'Amber eyes', 'Light Brown eyes', 'Gold eyes', 'Green eyes', 'Grey eyes', 'Hazel eyes', 'Orange eyes', 'Pink eyes', 'Purple eyes', 'Lavender eyes', 'Red eyes', 'Maroon eyes', 'Silver eyes', 'White eyes', 'Yellow eyes', 'Hazel eyes', 'Heterochromia', 'Multicolored eyes', 'Blue sclera', 'Black sclera', 'Bloodshot eyes', 'Green sclera', 'Grey sclera', 'Orange sclera', 'Pink sclera', 'Red sclera', 'Yellow sclera', 'Mismatched sclera', 'Flat chest', 'Small breasts', 'Medium breasts', 'Large breasts', 'Huge breasts', 'Gigantic breasts', 'dark-skinned female', 'dark skin', 'makeup', 'eyeliner', 'eyeshadow', 'blue eyeshadow', 'green eyeshadow', 'red eyeshadow', 'yellow eyeshadow', 'forehead mark', 'lip balm', 'lipgloss', 'lipstick', 'black lipstick', 'blue lipstick', 'green lipstick', 'orange lipstick', 'pink lipstick', 'striped lipstick', 'purple lipstick', 'red lipstick', 'white lipstick', 'yellow lipstick', 'mascara', 'aged up', 'body freckles', 'freckles', 'wide hips', 'ringed eyes', 'medium hair'];
+    'Ponytail', 'Front ponytail', 'High ponytail', 'Short ponytail', 'Side ponytail', 'Topknot', 'Twintails', 'Low twintails', 'Short twintails', 'Uneven twintails', 'Tri tails', 'Quad tails', 'Quin tails', 'Bob cut', 'Bowl cut', 'Buzz cut', 'Crew cut', 'Pixie cut', 'Quiff', 'Cornrows', 'Hairlocs', 'Hime cut', 'Mullet', 'Ringlets', 'Afro', 'Huge afro', 'Pompadour', 'Shouten pegasus mix mori', 'Aqua eyes', 'Black eyes', 'Blue eyes', 'Brown eyes', 'Amber eyes', 'Light Brown eyes', 'Gold eyes', 'Green eyes', 'Grey eyes', 'Hazel eyes', 'Orange eyes', 'Pink eyes', 'Purple eyes', 'Lavender eyes', 'Red eyes', 'Maroon eyes', 'Silver eyes', 'White eyes', 'Yellow eyes', 'Hazel eyes', 'Heterochromia', 'Multicolored eyes', 'Blue sclera', 'Black sclera', 'Bloodshot eyes', 'Green sclera', 'Grey sclera', 'Orange sclera', 'Pink sclera', 'Red sclera', 'Yellow sclera', 'Mismatched sclera', 'Flat chest', 'Small breasts', 'Medium breasts', 'Large breasts', 'Huge breasts', 'Gigantic breasts', 'dark-skinned female', 'dark skin', 'makeup', 'eyeliner', 'eyeshadow', 'blue eyeshadow', 'green eyeshadow', 'red eyeshadow', 'yellow eyeshadow', 'forehead mark', 'lip balm', 'lipgloss', 'lipstick', 'black lipstick', 'blue lipstick', 'green lipstick', 'orange lipstick', 'pink lipstick', 'striped lipstick', 'purple lipstick', 'red lipstick', 'white lipstick', 'yellow lipstick', 'mascara', 'aged up', 'body freckles', 'freckles', 'wide hips', 'ringed eyes', 'medium hair', 'greyscale', 'monochrome', 'curvy', 'hair ornament', 'x hair ornament', 'japanese text', 'hair ribbon', 'ribbon', 'yellow ribbon'];
 
     // Extend the domainConfig with an optional additional tag filter step
     const domainConfig = {
@@ -172,7 +172,7 @@ function extractAndPopulateTextbox() {
       } else { // For gelbooru.com
         modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...tags] : tags;
       }
-      modifiedTags = modifiedTags.join(', ') + (currentDomain === "danbooru.donmai.us" ? ", " : "");
+      modifiedTags = modifiedTags.join(', ');
 
       // Filtering out additional criteria from tags
       const filteredTags = tags
@@ -184,10 +184,10 @@ function extractAndPopulateTextbox() {
       const tagListElement = nodes[nodes.length - 1];
 
       // Injecting the second textbox with filtered tags, it will be injected first and then the next will be injected over this
-      injectTextbox(tagListElement, filteredTags, 'Filtered Tags');
+      injectTextbox(tagListElement, modifyText(filteredTags), 'Filtered Tags');
 
       // Injecting the first textbox with modified tags
-      injectTextbox(tagListElement, modifiedTags, 'Prompt');
+      injectTextbox(tagListElement, modifyText(modifiedTags), 'Prompt');
     }
   });
 }
