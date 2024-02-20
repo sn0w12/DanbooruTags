@@ -1,29 +1,27 @@
 # Define the structured list as a multiline string
 hair_traits = """
-Tattoo
-
-barcode_tattoo
-butterfly_tattoo
-dragon_tattoo
-heart_tattoo
-irezumi
-number_tattoo
-slave_tattoo
-star_tattoo
-tribal_tattoo
-womb_tattoo
-
-arm_tattoo
-back_tattoo
-* tramp_stamp
-chest_tattoo
-facial_tattoo
-full_body_tattoo
-leg_tattoo
-neck_tattoo
-pubic_tattoo
-shoulder_tattoo
-tattooed_breast
+Bat_ears
+Bear_ears
+*Bunny_ears*
+Cow_ears
+Deer_ears
+Dog_ears
+Ermine_ears
+Ferret_ears
+Goat_ears
+Horse_ears
+Kemonomimi_mode
+Monkey_ears
+Mouse_ears
+Panda_ears
+Pikachu_ears
+Pig_ears
+Raccoon_ears
+Reindeer_ears
+Sheep_ears
+Squirrel_ears
+Tiger_ears
+Wolf_ears
 """
 
 # Split the string into lines and initialize an array to hold the results

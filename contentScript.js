@@ -141,7 +141,9 @@ function extractAndPopulateTextbox() {
     'heart tattoo', 'irezumi', 'number tattoo', 'slave tattoo', 'star tattoo', 'tribal tattoo', 'womb tattoo', 'arm tattoo', 'back tattoo', 'tramp stamp', 'chest tattoo', 'facial tattoo', 
     'full body tattoo', 'leg tattoo', 'neck tattoo', 'pubic tattoo', 'shoulder tattoo', 'tattooed breast', 'fortissimo', 'musical note', 'treble clef', 'virtual youtuber',
     'elf', 'pointy ears', 'alternate breast size', 'asymmetrical horns', 'horns', 'demon horns', 'mole', 'mole under eye', 'animal ears', 'animal ear piercing', 'lion ears', 'lion girl',
-    'head wings', 'hair wings', 'fox girl', 'fox ears'];
+    'head wings', 'hair wings', 'fox girl', 'fox ears', 'cat ears', 'dog ears', 'bunny ears', 'wolf ears', 'mouse ears', 'cow ears', 'Bat ears', 'Bear ears', 'Bunny ears', 'Cow ears',
+    'Deer ears', 'Dog ears', 'Ermine ears', 'Ferret ears', 'Goat ears', 'Horse ears', 'Kemonomimi mode', 'Monkey ears', 'Mouse ears', 'Panda ears', 'Pikachu ears', 'Pig ears', 
+    'Raccoon ears', 'Reindeer ears', 'Sheep ears', 'Squirrel ears', 'Tiger ears', 'Wolf ears', 'alpaca ears'];
 
     // Extend the domainConfig with an optional additional tag filter step
     const domainConfig = {
