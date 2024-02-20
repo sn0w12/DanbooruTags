@@ -143,7 +143,7 @@ function extractAndPopulateTextbox() {
     'elf', 'pointy ears', 'alternate breast size', 'asymmetrical horns', 'horns', 'demon horns', 'mole', 'mole under eye', 'animal ears', 'animal ear piercing', 'lion ears', 'lion girl',
     'head wings', 'hair wings', 'fox girl', 'fox ears', 'cat ears', 'dog ears', 'bunny ears', 'wolf ears', 'mouse ears', 'cow ears', 'Bat ears', 'Bear ears', 'Bunny ears', 'Cow ears',
     'Deer ears', 'Dog ears', 'Ermine ears', 'Ferret ears', 'Goat ears', 'Horse ears', 'Kemonomimi mode', 'Monkey ears', 'Mouse ears', 'Panda ears', 'Pikachu ears', 'Pig ears', 
-    'Raccoon ears', 'Reindeer ears', 'Sheep ears', 'Squirrel ears', 'Tiger ears', 'Wolf ears', 'alpaca ears'];
+    'Raccoon ears', 'Reindeer ears', 'Sheep ears', 'Squirrel ears', 'Tiger ears', 'Wolf ears', 'alpaca ears', 'tan', 'tanline', 'sharp teeth'];
 
     // Extend the domainConfig with an optional additional tag filter step
     const domainConfig = {
