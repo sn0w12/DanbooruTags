@@ -80,8 +80,6 @@ function injectTextbox(targetElement, tags, textContent) {
 
 // Extract 'data-tag-name' values and populate the textbox
 function extractAndPopulateTextbox() {
-  const currentDomain = window.location.hostname;
-
   const whitelistTags = [];
   const blacklistTags = [
     'artist name', 'character name', 'copyright name', 'company name', 'group name',
@@ -106,25 +104,10 @@ function extractAndPopulateTextbox() {
     'fantia logo', 'fantia username', 'signature',
     'plurk logo', 'plurk username', 'signature',
     'artist logo', 'artist username', 'signature',
-    'jewelry', 'hoop earrings', 'stud earrings', 'bell earrings', 'cherry earrings',
-    'crescent earrings', 'cross earrings', 'crystal earrings', 'flower earrings',
-    'food-themed earrings', 'heart earrings', 'jack-o\'-lantern earrings',
-    'magatama earrings', 'orange-shaped earrings', 'pill earrings', 'pineapple earrings',
-    'planet earrings', 'pom pom earrings', 'potara earrings', 'shell earrings',
-    'skull earrings', 'snowflake earrings', 'spade earrings', 'star earrings',
-    'strawberry earrings', 'tassel earrings', 'yin yang earrings', 'adjusting earrings',
-    'multiple earrings', 'gold earrings', 'silver earrings', 'aqua earrings',
-    'black earrings', 'blue earrings', 'brown earrings', 'green earrings',
-    'grey earrings', 'orange earrings', 'pink earrings', 'purple earrings',
-    'red earrings', 'white earrings', 'yellow earrings', 'earrings', 'uncensored',
-    'licking another\'s face', 'licking armpit', 'licking breast', 'licking cum',
-    'licking dildo', 'licking ear', 'licking eye', 'licking finger', 'licking floor',
-    'licking foot', 'licking hand', 'licking leg', 'licking navel', 'licking neck',
-    'licking nipple', 'licking panties', 'licking penis', 'licking stomach',
-    'licking testicle', 'licking weapon', 'bar censor', 'blank censor', 'blur censor',
+    'bar censor', 'blank censor', 'blur censor',
     'glitch censor', 'heart censor', 'light censor', 'novelty censor', 'character censor',
     'text censor', 'flower censor', 'interface censor', 'speech bubble', 'english text',
-    'licking', 'censored', 'mosaic censoring', 'web adress', 'alternate costume', 'web address'
+    'licking', 'censored', 'mosaic censoring', 'web adress', 'alternate costume', 'web address', 'dated'
   ];
 
   // Load options from storage and split into arrays
@@ -143,8 +126,8 @@ function extractAndPopulateTextbox() {
     'Bald girl', 'Asymmetrical Hair', 'Side Shave', 'Undercut', 'Alternate hairstyle', 'Hair down', 'Hair up', 'Curly hair', 'Ringlets', 'Drill hair', 'Twin drills', 'Flipped hair', 
     'Messy hair', 'Pointy hair', 'Spiked hair', 'Wavy hair', 'Finger wave', 'Bangs', 'Asymmetrical bangs', 'Baby bangs', 'Blunt bangs', 'Bumper bangs', 'Fringe', 'Hair over eyes', 
     'Hair over one eye /hooe', 'Parted bangs', 'Swept bangs', 'Curtained hair', 'Hair between eyes', 'Hair intakes', 'Payot', "Widow's peak", 'Ahoge', 'Heart ahoge', 'Huge ahoge', 
-    'Antenna hair', 'Fauxhawk', 'Hair slicked back', 'Mohawk', 'Side Part', 'Victory Rolls', 'Zigzag Part', 'hair censor', 'Hair bikini', 'Hair in mouth', 'Hair over breasts', 
-    'Hair over shoulder', 'Hair scarf', 'Braid', 'Crown braid', 'Dutch braid', 'Fishtail braid', 'Front braid', 'Side braid', 'French braid', 'Single braid', 'Multiple braids', 
+    'Antenna hair', 'Fauxhawk', 'Hair slicked back', 'Mohawk', 'Side Part', 'Victory Rolls', 'Zigzag Part', 'hair censor', 'Hair bikini', 'Hair in mouth', 'Hair scarf', 
+    'Braid', 'Crown braid', 'Dutch braid', 'Fishtail braid', 'Front braid', 'Side braid', 'French braid', 'Single braid', 'Multiple braids', 
     'Ladder braid', 'Twin braids', 'Tri braids', 'Quad braids', 'Fauxhawk', 'Hair bun', 'Braided bun', 'Double bun', 'Hair rings', 'Half updo', 'One side up', 'Two side up', 
     'Low-tied long hair', 'Multi-tied hair', 'Ponytail', 'Front ponytail', 'High ponytail', 'Short ponytail', 'Side ponytail', 'Topknot', 'Twintails', 'Low twintails', 
     'Short twintails', 'Uneven twintails', 'Tri tails', 'Quad tails', 'Quin tails', 'Bob cut', 'Bowl cut', 'Buzz cut', 'Crew cut', 'Pixie cut', 'Quiff', 'Cornrows', 'Hairlocs', 
@@ -156,7 +139,9 @@ function extractAndPopulateTextbox() {
     'pink lipstick', 'striped lipstick', 'purple lipstick', 'red lipstick', 'white lipstick', 'yellow lipstick', 'mascara', 'aged up', 'body freckles', 'freckles', 'wide hips', 'ringed eyes', 'medium hair', 
     'greyscale', 'monochrome', 'curvy', 'hair ornament', 'x hair ornament', 'japanese text', 'hair ribbon', 'ribbon', 'yellow ribbon', 'Tattoo', 'barcode tattoo', 'butterfly tattoo', 'dragon tattoo', 
     'heart tattoo', 'irezumi', 'number tattoo', 'slave tattoo', 'star tattoo', 'tribal tattoo', 'womb tattoo', 'arm tattoo', 'back tattoo', 'tramp stamp', 'chest tattoo', 'facial tattoo', 
-    'full body tattoo', 'leg tattoo', 'neck tattoo', 'pubic tattoo', 'shoulder tattoo', 'tattooed breast', 'fortissimo', 'musical note', 'treble clef', 'virtual youtuber'];
+    'full body tattoo', 'leg tattoo', 'neck tattoo', 'pubic tattoo', 'shoulder tattoo', 'tattooed breast', 'fortissimo', 'musical note', 'treble clef', 'virtual youtuber',
+    'elf', 'pointy ears', 'alternate breast size', 'asymmetrical horns', 'horns', 'demon horns', 'mole', 'mole under eye', 'animal ears', 'animal ear piercing', 'lion ears', 'lion girl',
+    'head wings', 'hair wings', 'fox girl', 'fox ears'];
 
     // Extend the domainConfig with an optional additional tag filter step
     const domainConfig = {
