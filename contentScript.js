@@ -107,7 +107,8 @@ function extractAndPopulateTextbox() {
     'bar censor', 'blank censor', 'blur censor',
     'glitch censor', 'heart censor', 'light censor', 'novelty censor', 'character censor',
     'text censor', 'flower censor', 'interface censor', 'speech bubble', 'english text',
-    'licking', 'censored', 'mosaic censoring', 'web adress', 'alternate costume', 'web address', 'dated'
+    'licking', 'censored', 'mosaic censoring', 'web adress', 'alternate costume', 'web address', 'dated',
+    'korean text'
   ];
 
   // Load options from storage and split into arrays
@@ -145,7 +146,7 @@ function extractAndPopulateTextbox() {
       'head wings', 'hair wings', 'fox girl', 'fox ears', 'cat ears', 'dog ears', 'bunny ears', 'wolf ears', 'mouse ears', 'cow ears', 'Bat ears', 'Bear ears', 'Bunny ears', 'Cow ears',
       'Deer ears', 'Dog ears', 'Ermine ears', 'Ferret ears', 'Goat ears', 'Horse ears', 'Kemonomimi mode', 'Monkey ears', 'Mouse ears', 'Panda ears', 'Pikachu ears', 'Pig ears', 
       'Raccoon ears', 'Reindeer ears', 'Sheep ears', 'Squirrel ears', 'Tiger ears', 'Wolf ears', 'alpaca ears', 'tan', 'tanline', 'sharp teeth', 'blunt ends', 'glasses', 'colored skin', 'purple skin',
-      'scar'
+      'scar', 'animal ear fluff', 'black nails', 'fang', 'fox tail', 'red halo', 'tail', 'halo', 'angel wings', 'feathered wings', 'white wings', 'wings'
     ];
 
     // Extend the domainConfig with an optional additional tag filter step
