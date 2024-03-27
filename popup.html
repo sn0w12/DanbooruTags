@@ -50,8 +50,9 @@
                 height: 80px;
             }
 
-        #saveBtn {
+        button {
             padding: 5px 10px;
+            margin-bottom: 5px;
             background-color: #d1d1da;
             color: #1e1e2c;
             border: 1px solid #777892;
@@ -59,7 +60,7 @@
             width: 100%;
         }
 
-            #saveBtn:hover {
+            button:hover {
                 background-color: #ccc;
             }
 
@@ -92,6 +93,23 @@
     </div>
 
     <button id="saveBtn">Save</button>
+
+    <label for="userTags">Your Tags (comma-separated):</label>
+    <div class="textarea-container">
+        <textarea id="userTags"></textarea>
+    </div>
+
+    <button id="processBtn">Process Tags</button>
+
+    <label>Character Tags:</label>
+    <div class="textarea-container">
+        <textarea id="characterTagsOutput" readonly></textarea>
+    </div>
+
+    <label>Filtered Tags:</label>
+    <div class="textarea-container">
+        <textarea id="filteredTagsOutput" readonly></textarea>
+    </div>
 
     <script src="popup.js"></script>
 </body>

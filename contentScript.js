@@ -1,3 +1,7 @@
+const currentDomain = window.location.hostname;
+const characterTagsMap = new Map();
+let characterTags;
+
 // Inject a textbox and a "Copy" button below the target element
 function injectTextbox(targetElement, tags, textContent) {
   const domainStyles = {
@@ -120,7 +124,6 @@ function extractAndPopulateTextbox() {
       blacklistTags.push(...result.blacklistTags);
     }
 
-    // Assuming additionalExclusionList is defined
     const additionalExclusionList = [
       'Alternate hair color', 'Aqua hair', 'Black hair', 'Blonde hair', 'Blue hair', 'Brown hair', 'Light brown hair', 'Green hair', 'Grey hair', 
       'Orange hair', 'Pink hair', 'Purple hair', 'Lavender hair', 'Red hair', 'Silver hair', 'White hair', 'Multicolored hair', 'Gradient hair', 'Highlights', 'Two-tone hair', 
@@ -146,7 +149,7 @@ function extractAndPopulateTextbox() {
       'head wings', 'hair wings', 'fox girl', 'fox ears', 'cat ears', 'dog ears', 'bunny ears', 'wolf ears', 'mouse ears', 'cow ears', 'Bat ears', 'Bear ears', 'Bunny ears', 'Cow ears',
       'Deer ears', 'Dog ears', 'Ermine ears', 'Ferret ears', 'Goat ears', 'Horse ears', 'Kemonomimi mode', 'Monkey ears', 'Mouse ears', 'Panda ears', 'Pikachu ears', 'Pig ears', 
       'Raccoon ears', 'Reindeer ears', 'Sheep ears', 'Squirrel ears', 'Tiger ears', 'Wolf ears', 'alpaca ears', 'tan', 'tanline', 'sharp teeth', 'blunt ends', 'glasses', 'colored skin', 'purple skin',
-      'scar', 'animal ear fluff', 'black nails', 'fang', 'fox tail', 'red halo', 'tail', 'halo', 'angel wings', 'feathered wings', 'white wings', 'wings'
+      'scar', 'animal ear fluff', 'black nails', 'fang', 'fox tail', 'red halo', 'tail', 'halo', 'angel wings', 'feathered wings', 'white wings', 'wings', 'curved horns', 'draph'
     ];
 
     // Extend the domainConfig with an optional additional tag filter step
@@ -181,13 +184,13 @@ function extractAndPopulateTextbox() {
         modifiedTags = positiveTags.length > 0 ? [...positiveTags, ...tags] : tags;
       }
       modifiedTags = modifiedTags.join(', ');
-
+      
       // Filtering out additional criteria from tags
       const filteredTags = tags
-        .filter(tag => !additionalExclusionList.some(exclusion => tag.includes(exclusion.toLowerCase())))
+        .filter(tag => !additionalExclusionList.some(exclusion => tag.toLowerCase() === exclusion.toLowerCase()))
         .join(', ');
-
-      const excludedTags = tags.filter(tag => additionalExclusionList.some(exclusion => tag.includes(exclusion.toLowerCase())));
+      
+      const excludedTags = tags.filter(tag => additionalExclusionList.some(exclusion => tag.toLowerCase() === exclusion.toLowerCase()));      
 
       // Identifying the last tag list element
       const nodes = document.querySelectorAll(config.tagListSelector);
@@ -195,6 +198,7 @@ function extractAndPopulateTextbox() {
 
       // Inject the textbox for excluded tags if there are any
       if (excludedTags.length > 0) {
+        characterTags = excludedTags;
         const excludedTagsString = excludedTags.join(', ');
         injectTextbox(tagListElement, modifyText(excludedTagsString), 'Character Tags');
       }
@@ -205,22 +209,17 @@ function extractAndPopulateTextbox() {
       // Injecting the first textbox with modified tags
       injectTextbox(tagListElement, modifyText(modifiedTags), 'Prompt');
     }
+    // Main logic based on the current domain
+    if (currentDomain === "danbooru.donmai.us") {
+      handleDomainDanbooru();
+    } else if (currentDomain === "gelbooru.com") {
+      handleDomainGelbooru();
+    }
   });
 }
 
 // Execute the extraction when the DOM is fully loaded
 window.addEventListener('load', extractAndPopulateTextbox);
-
-// Main logic based on the current domain
-if (currentDomain === "danbooru.donmai.us") {
-  handleDomainDanbooru();
-} else if (currentDomain === "gelbooru.com") {
-  handleDomainGelbooru();
-}
-
-// Character Names
-// Find all target HTML elements
-const currentDomain = window.location.hostname;
 
 function handleDomainDanbooru() {
   const allTags = new Set();
@@ -256,28 +255,49 @@ function handleDomainDanbooru() {
 }
 
 function handleDomainGelbooru() {
-  // Select all elements with class 'tag-type-character'
-  const targetElements = document.querySelectorAll('.tag-type-character');
+  // Parsing the current URL
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // Check if 's=view' is present in the URL
+  if (urlParams.get('s') === 'view') {
+    // Select all elements with class 'tag-type-character'
+    const targetElements = document.querySelectorAll('.tag-type-character');
 
-  // Extract and log tag names, excluding any that are "?"
-  const tags = Array.from(targetElements).map(targetElement => {
-    // Assuming the first <a> tag within each element is the relevant tag
-    const tagElement = targetElement.querySelector('a:not([href*="wiki"])'); // Exclude wiki links if they always use "?"
-    return tagElement ? tagElement.textContent.trim() : null;
-  }).filter(tag => tag !== null && tag !== "?");
+    // Extract and log tag names, excluding any that are "?"
+    const tags = Array.from(targetElements).map(targetElement => {
+      // Assuming the first <a> tag within each element is the relevant tag
+      const tagElement = targetElement.querySelector('a:not([href*="wiki"])'); // Exclude wiki links if they always use "?"
+      return tagElement ? tagElement.textContent.trim() : null;
+    }).filter(tag => tag !== null && tag !== "?");
 
-  // Assuming 'createCopyButton' is a function to inject a "Copy" button next to each tag
-  targetElements.forEach((element, index) => {
-    if (tags[index]) { // Check if tag exists to avoid errors
-      createCopyButton(tags[index], element); // Adjusted to inject the button directly into the target element
+    // Assuming 'createCopyButton' is a function to inject a "Copy" button next to each tag
+    targetElements.forEach((element, index) => {
+      if (tags[index]) { // Check if tag exists to avoid errors
+        createCopyButton(tags[index], element); // Adjusted to inject the button directly into the target element
+      }
+    });
+
+    // Inject a textbox with all character tags at the end if there are more than one.
+    if (tags.length > 1) {
+      const tagListElement = targetElements[targetElements.length - 1];
+      const modifiedTags = tags.map(tag => modifyText(tag)).join(', ') + ", "; // Assuming 'modifyText' modifies the tag text
+      injectTextbox(tagListElement, modifiedTags, 'All Characters');
+    } else {
+      const tagMap = new TagMap();
+      console.log(characterTags);
+
+      tagMap.ready.then(() => {
+        // Ensure the 'ready' state of TagMap is awaited before proceeding
+        Promise.all(characterTags.map(tag => tagMap.addTag(tags[0], tag)))
+        .then(() => {
+          return tagMap.findMajorityTags(tags[0]);
+        })
+        .then(majorityTags => {
+          console.log(`Majority Tags for ${tags[0]}:`, majorityTags);
+        })
+        .catch(error => console.error('Error in adding tags or finding majority:', error));
+      });
     }
-  });
-
-  // Inject a textbox with all character tags at the end if there are more than one.
-  if (tags.length > 1) {
-    const tagListElement = targetElements[targetElements.length - 1];
-    const modifiedTags = tags.map(tag => modifyText(tag)).join(', ') + ", "; // Assuming 'modifyText' modifies the tag text
-    injectTextbox(tagListElement, modifiedTags, 'All Characters');
   }
 }
 
@@ -330,4 +350,81 @@ function copyToClipboard(text) {
   textarea.select();
   document.execCommand('copy');
   document.body.removeChild(textarea);
+}
+
+class TagMap {
+  constructor() {
+    this.characterTags = new Map();
+    // Ensure `this.ready` is a Promise
+    this.ready = new Promise((resolve, reject) => {
+        chrome.storage.local.get(['characterTags'], (result) => {
+            if (chrome.runtime.lastError) {
+                console.error('Error loading character tags:', chrome.runtime.lastError);
+                reject(chrome.runtime.lastError);
+                return;
+            }
+
+            if (result.characterTags) {
+                this.characterTags = new Map(Object.entries(result.characterTags).map(([character, tags]) => [character, new Map(Object.entries(tags))]));
+            }
+            resolve();
+        });
+    });
+}
+
+  // Adds a tag to a character with Chrome storage synchronization
+  async addTag(characterName, tag) {
+    await this.ready;
+    
+    if (!this.characterTags.has(characterName)) {
+      this.characterTags.set(characterName, new Map([[tag, 1]]));
+    } else {
+      const tags = this.characterTags.get(characterName);
+      const count = tags.get(tag) || 0;
+      tags.set(tag, count + 1);
+    }
+  
+    // Convert the entire Map structure into a storable format
+    const storableCharacterTags = Array.from(this.characterTags.entries()).reduce((acc, [character, tags]) => ({
+      ...acc,
+      [character]: Object.fromEntries(tags)
+    }), {});
+  
+    // Asynchronously update Chrome storage and wait for it to complete
+    await new Promise(resolve => chrome.storage.local.set({ characterTags: storableCharacterTags }, resolve));
+  }  
+
+  async findMajorityTags(characterName, thresholdPercentage = 50) {
+    await this.ready; // Ensure the map is loaded from storage
+    return new Promise((resolve) => {
+      if (!this.characterTags.has(characterName)) {
+        console.log("Character doesn't exist");
+        resolve([]);
+        return;
+      }
+  
+      const tags = this.characterTags.get(characterName);
+      let maxCount = 0;
+      
+      // First, find the highest count (maxCount) among the tags
+      for (let [tag, count] of tags) {
+        if (count > maxCount) {
+          maxCount = count;
+        }
+      }
+      
+      // Calculate the threshold count based on the percentage of maxCount
+      const thresholdCount = maxCount * (thresholdPercentage / 100);
+      let majorityTags = [];
+      
+      // Then, determine which tags meet or exceed this threshold
+      for (let [tag, count] of tags) {
+        if (count >= thresholdCount) {
+          majorityTags.push(tag);
+        }
+      }
+  
+      resolve(majorityTags);
+    });
+  }     
 }
