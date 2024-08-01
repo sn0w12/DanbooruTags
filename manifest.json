@@ -1,20 +1,18 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Booru Tag List Extractor",
   "version": "1.0",
   "description": "Extracts tags from Danbooru or Gelbooru",
   "icons": {
-    "16": "danbooru-logo-16.png",
-    "48": "danbooru-logo-48.png",
-    "128": "danbooru-logo-128.png"
+    "16": "img/danbooru-logo-16.png",
+    "48": "img/danbooru-logo-48.png",
+    "128": "img/danbooru-logo-128.png"
   },
-  "chrome_url_overrides": {
-  "fileBrowserHandler": "popup.html"
-  },
-  "browser_action": {
+  "action": {
     "default_popup": "popup.html"
   },
-  "permissions": ["http://*/", "https://*/", "storage", "activeTab", "fileSystem" ],
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": ["http://*/", "https://*/"],
   "content_scripts": [
     {
       "matches": ["https://danbooru.donmai.us/posts/*", "https://gelbooru.com/*"],
